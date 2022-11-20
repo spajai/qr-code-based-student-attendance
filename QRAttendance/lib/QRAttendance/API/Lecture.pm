@@ -61,8 +61,9 @@ sub create_lecture {
                 binds => [$lecture_data_json],
             }
         );
+
         if ( defined $insert_result->{ins_result} ) {
-            my $res_json = JSON::XS->new->decode( $insert_result->{ins_result} );
+            my $res_json = $utils->dcd_json( $insert_result->{ins_result} );
                 $log->info("lecture created $insert_result->{ins_result}");
                 $response = {
                     result  => 'success',

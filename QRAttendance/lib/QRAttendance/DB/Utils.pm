@@ -5,10 +5,27 @@ use QRAttendance::Policy;
 #remove later
 use Data::Dumper;
 
+use SQL::Abstract;
 extends qw/
   QRAttendance::DB
   QRAttendance::Utils
 /;
+use  QRAttendance::Logger;
+
+has 'sql_abstract' => (
+    is      => 'ro',
+    isa     => 'SQL::Abstract',
+    default => sub { SQL::Abstract->new(array_datatypes => 1) },
+    lazy    => 1,
+);
+
+has 'api_logger' => (
+    is      => 'ro',
+    isa     => 'QRAttendance::Logger',
+    default => sub { QRAttendance::Logger->global },
+    lazy    => 1,
+);
+
 
 #----------------------------------------------------------------------------------#
 # custom module for all Utils                                                      #
@@ -363,78 +380,6 @@ sub update {
     }
 
     return $result;
-}
-
-sub get_entity_value_map {
-    my ($self, $params) = @_;
-
-    my $table         = $params->{table};
-    my $columns       = $params->{columns};
-    my $reverse_hash  = $params->{reverse_hash};
-    my $where         = $params->{where};
-    my $col_str       = join(',',@$columns);
-    my $abstract      = $self->sql_abstract;
-    my ($sql, @bind)  = $abstract->select($table, $columns, $where);
-
-    $sql = "select jsonb_object_agg($col_str) as result from ($sql) as sq";
-
-    my $result_json = $self->fetch_row_hashref({ query => $sql, binds => [@bind] });
-    #  {"READY": 2, "ACTIVE": 3, "ENDING": 5, "PURGED": 8, "SHELVED": 6, "ARCHIVED": 7, "COMPLETE": 4, "SCHEDULED": 1}
-
-    my $result = $self->dcd_json( $result_json->{result} ) if (defined $result_json->{result});
-
-    if($reverse_hash){
-        my %inverse;
-        push @{ $inverse{ $result->{$_} } }, $_ for keys %$result;
-        return {
-            result       => $result,
-            reverse_hash => \%inverse
-        };
-    }
-
-    return $result;
-
-}
-
-sub get_dropdown_entity_value_map {
-    my ($self, $params) = @_;
-
-    my $table         = $params->{table};
-    my $columns       = $params->{columns} // 'id as id, name as text';
-    my $where         = $params->{where};
-    my $json_output   = $params->{json_output} // 0;
-    my $abstract      = $self->sql_abstract;
-    my ($sql, @bind)  = $abstract->select($table, $columns, $where);
-
-    $sql = "select json_agg(row_to_json(sq)) as result from ($sql) as sq;";
-    my $result_json = $self->fetch_row_hashref({ query => $sql, binds => [@bind] });
-
-    my $result = $json_output ?  $result_json->{result} : $self->dcd_json( $result_json->{result} );
-
-    return $result;
-
-}
-
-sub get_next_id {
-    #note this will increament the values
-    my ($self, $talename) = @_;
-
-    my $max_id_data = $self->fetch_row_hashref({
-        query => "SELECT nextval(pg_get_serial_sequence(?, 'id')) AS id",
-        binds => [$talename]
-    });
-    return $max_id_data->{id};
-}
-
-sub get_current_id {
-    my ($self, $seq_name) = @_;
-
-    # event_call_list_contact_id_seq
-    my $curr_id_data = $self->fetch_row_hashref({
-        query => "SELECT last_value AS id FROM $seq_name",
-    });
-
-    return $curr_id_data->{id};
 }
 
 1;

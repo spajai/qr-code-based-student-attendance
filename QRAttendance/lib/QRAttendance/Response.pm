@@ -239,6 +239,20 @@ our %SERVER_RESPONSE = (
             i18n_code => 'status.lecture_success'
         }
     },
+    attendance_marked_or_invalid => {
+        throw => {
+            code      => 200,
+            message   => 'Skipped/Error see information for issue',
+            i18n_code => 'status.attendance_marked_or_invalid'
+        }
+    },
+    mark_present_success => {
+        throw => {
+            code      => 200,
+            message   => 'Success Marked present Note the id and information for future reference',
+            i18n_code => 'status.mark_present_success'
+        }
+    },
 );
 
 1;

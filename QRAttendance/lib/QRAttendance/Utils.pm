@@ -11,7 +11,7 @@ use POSIX;
 use String::Validator::Password;
 use File::Compare;
 use File::Path qw(make_path remove_tree);
-
+use JSON::XS;
 use Config::Any;
 use File::Spec;
 use Path::Class;

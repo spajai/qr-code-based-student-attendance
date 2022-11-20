@@ -23,65 +23,117 @@ sub qr_check_in {
 
     my $log = QRAttendance::Logger->global();
     my $utils = $self->utils;
+    my $qr_data = $self->db_utils->fetch_row_hashref({
+        query => q/select * from qrcode where code = ? AND  extract(epoch from now())::INT < expiry_epoch/,
+        binds => [$qrcode]
+    });
+    my $response;
+    if(not defined $qr_data) {
+        $log->error("Invalid or expired qr code $qrcode , user_id $user_id ");
+        $response = {
+            result => 'error',
+            error  => 'attendance_marked_or_invalid',
+            data   => qq/Invalid Request There could be several reason 
+                        1. Invalid QR code or Expired
+                        2. QR code has been expired/
+        };
+        return $response;
+    }
 
     my $db_data = $self->db_utils->fetch_row_hashref({
         query => q/
                 select 
-                    * 
-                from  qrcode  qr
-                join attendances a on qr.lecture_id = a.lecture_id and is_delete is false and user_id = ?
-                where extract(epoch from now())::INT < expiry_epoch and code='?'
-                and a.present is false
+                    a.*
+                from qrcode  qr
+                join attendances a on qr.lecture_id = a.lecture_id and a.is_deleted is false and a.user_id = ?
+                where 
+                   qr.id = ?
             /,
-       binds => [$qrcode, $user_id]
+       binds => [ $user_id, $qr_data->{id} ]
     });
 
-    # my $response;
-    # if(defined $db_data) {
-    #     $log->warn("SKIPPING Lecture already scheduled");
-    #     $response = {
-    #         result => 'error',
-    #         error  => 'lecture_already_scheduled',
-    #     };
-    #     return $response;
-    # }
+    if(! defined $db_data || (defined $db_data && $db_data->{present}) ) {
+        $log->warn("SKIPPING data not foundqr $qrcode , user_id $user_id ");
+        $response = {
+            result => 'error',
+            error  => 'attendance_marked_or_invalid',
+            data   => "Invalid Request There could be several reason \n1. QR code do not belong to user \n2. Already Marked Present"
+        };
+        return $response;
+    }
 
-    # my $lecture_create_data = {};
-    # foreach (qw/name lecture_code room_code course_code user_id start_timestamp/) {
-    #     $lecture_create_data->{$_} = $data->{$_};
-    # }
+    my $student_data = $self->db_utils->fetch_row_hashref({
+        query => q/
+                select
+                    a.*
+                from attendances a
+                where
+                   user_id  = ?  and
+                   lecture_id = ?  and
+                   (current_date)::date = date::date
+                   
+            /,
+       binds => [ $user_id, $qr_data->{lecture_id} ]
+    });
 
-    # my $lecture_data_json = $utils->enc_json($lecture_create_data);
+    if(not defined $student_data ) {
+        $log->warn("SKIPPING student dont have lecture scheduled today $qrcode , user_id $user_id , lecture id $qr_data->{lecture_id}");
+        $response = {
+            result => 'error',
+            error  => 'attendance_marked_or_invalid',
+            data   => "Invalid Request There could be several reason\n 1. There is no class scheduled today for the scanning user (Make sure using the valid student account)"
+        };
+        return $response;
+    }
 
-    # $log->info("Trying to create lecture with data $lecture_data_json\n");
-    # try {
-    #     my $insert_result = $self->db_utils->fetch_row_hashref(
-    #         {
-    #             query => 'SELECT * FROM register_lecture(?) as ins_result',
-    #             binds => [$lecture_data_json],
-    #         }
-    #     );
-    #     if ( defined $insert_result->{ins_result} ) {
-    #         my $res_json = JSON::XS->new->decode( $insert_result->{ins_result} );
-    #             $log->info("lecture created $insert_result->{ins_result}");
-    #             $response = {
-    #                 result  => 'success',
-    #                 message => 'lecture_success',
-    #                 data    => $res_json
-    #             };
-    #     }
-    #     else {
-    #         $log->error("Unable to create lecture");
-    #         die "Unable to create lecture";
-    #     }
-    # } catch {
-    #     $response = {
-    #         result => 'error',
-    #         error  => 'data_base_error'
-    #     };
-    #     $log->error("Error Unable to create lecture in database error". $_);
-    # };
 
-    # return $response;
+    $log->info("Trying to mark present qr $qrcode , user_id $user_id\n");
+    try {
+        # table update_val where_hash/
+        my $result = $self->db_utils->update({
+            table       => 'attendances',
+            update_val  => { present => 1},
+            where_hash  => { id => $db_data->{id}, user_id => $user_id, lecture_id => $qr_data->{lecture_id} },
+            returning   => { returning => '"id"' }
+        });
+        if ($result) {
+            $log->info("marked prsent attendance id $db_data->{id}");
+            $response = {
+                result  => 'success',
+                message => 'mark_present_success',
+                data    =>  "id for attendance id reference ". $db_data->{id}
+            };
+        }
+        else {
+            $log->error("Unable to mark present");
+            die "Unable to mark present";
+        }
+    } catch {
+        $response = {
+            result => 'error',
+            error  => 'data_base_error'
+        };
+        $log->error("Error Unable to mark present database error". $_);
+    };
+
+    return $response;
 }
 
+
+sub qr_info {
+    my ($self, $qrcode) = @_;
+
+    my $qr_data = $self->db_utils->fetch_row_hashref({
+        query => q/select result from qr_data_vw where qr_code = ?/,
+        binds => [$qrcode]
+    }) // {};
+
+    $qr_data = $self->utils->dcd_json($qr_data->{result});
+
+    return {
+        result  => 'success',
+        message => 'qr_data_fetched',
+        data    =>  $qr_data 
+    };
+
+}

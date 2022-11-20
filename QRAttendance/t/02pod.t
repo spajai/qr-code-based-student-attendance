@@ -1,6 +1,9 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
 use Test::More;
 
 plan skip_all => 'set TEST_POD to enable this test' unless $ENV{TEST_POD};
