@@ -1,0 +1,9 @@
+type,first_name,last_name,sex,email,username,password,phone,dob,device_token,course
+Student,jon,snow,M,jon.snow@winterfell.com,jsnow,WinterFall1!,8989898989,01-01-1990,636e78d3-764f-40ce-8d6e-e61a23be1fda,CS-101
+Student,david,smith,M,d.smith@qrattendace.com,dsmith,d.smith!,777798989,02-01-1990,4f9a41d6-a5dc-4964-b731-1bb5e1e411c0,CS-102
+Student,Bowman,Clifton,M,clifton.bowman@example.com,c.bowman,Bowman#!,55555989,03-01-1990,5071825c-d940-41ae-9c33-ec0d91541d87,CS-101
+Student,Erica,Ruiz,F,erica.ruiz@example.com,e.ruiz,Erica123!,7878785474,04-01-1990,5071825c-d940-41ae-9c33-ec0d91041d47,DS-100
+Teacher,Jeanette,Sutton,F,jeanette.sutton@qrattendace.com.com,Jsutton,Jsutton@123,111111112,05-01-1980,b663f34f-cd87-4ceb-90e8-77d729003d3a,CS-101
+Teacher,Brayden,fields,M,fields.brayden@qrattendace.com,bfields,bfields@31!,111111113,06-01-1980,8a458a17-bd91-4821-b003-fca0e9a2c393,CS-102
+Teacher,raman,shah,M,raman.shah@qrattendace.com,rshah,raman*!,111111114,07-01-1980,8a458a17-bd91-4821-b003-fca0e9a2c396,DS-100
+Teacher,Neha,roy,F,n.roy@qrattendace.com,nroy,nroy#!ds,5611111114,07-01-1950,8a458a17-bd91-4821-b003-fca0e9a2c596,CS-202

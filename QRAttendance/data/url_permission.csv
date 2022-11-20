@@ -1,0 +1,5 @@
+type,name,prefix,path,permission_group,http_method
+API,"get lecture",/api/v1,/lecture,Teacher|Student,GET
+API,"create lecture",/api/v1,/schedule-lecture,Teacher,POST
+API,"create lecture",/api/v1,/qr-check-in,Student,POST
+UI,"view dashboard",,/dashboard,Teacher|Student,GET
