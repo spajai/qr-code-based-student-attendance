@@ -1,0 +1,9 @@
+/home/sushrut/upwrk_student_attendance/QRAttendance/local/bin/bmkpasswd
+/home/sushrut/upwrk_student_attendance/QRAttendance/local/lib/perl5/App/bmkpasswd.pm
+/home/sushrut/upwrk_student_attendance/QRAttendance/local/lib/perl5/Crypt/Bcrypt/Easy.pm
+/usr/local/bin/bmkpasswd
+/usr/local/man/man1/bmkpasswd.1p
+/usr/local/man/man3/App::bmkpasswd.3pm
+/usr/local/man/man3/Crypt::Bcrypt::Easy.3pm
+/usr/local/share/perl/5.26.1/App/bmkpasswd.pm
+/usr/local/share/perl/5.26.1/Crypt/Bcrypt/Easy.pm

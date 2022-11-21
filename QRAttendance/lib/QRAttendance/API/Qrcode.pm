@@ -16,8 +16,59 @@ has 'db_utils' => (
     default       => sub { QRAttendance::DB::Utils->new },
     lazy          => 1
 );
+=pod
 #----------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------##
+qr_check_in 
+        used to mark attendance_marked_or_invalid
+
+        input qrcode
+
+        checks:
+
+             Invalid QR code or Expired
+             QR code has been expired
+             QR code do not belong to user 
+             Already Marked Present"
+
+    output 
+        success
+        {
+                result  => 'success',
+                message => 'mark_present_success',
+                data    =>  "id for attendance id reference ". $db_data->{id}
+        };
+
+    or error 
+    
+        {
+            result => 'error',
+            error  => 'attendance_marked_or_invalid',
+            data   => qq/Invalid Request There could be several reason 
+                        1. Invalid QR code or Expired
+                        2. QR code has been expired/
+        }
+
+        or 
+
+        {
+            result => 'error',
+            error  => 'attendance_marked_or_invalid',
+            data   => "Invalid Request There could be several reason \n1. QR code do not belong to user \n2. Already Marked Present"
+        };
+
+        or 
+
+        {
+            result => 'error',
+            error  => 'attendance_marked_or_invalid',
+            data   => "Invalid Request There could be several reason\n 1. There is no class scheduled today for the scanning user (Make sure using the valid student account)"
+        }
+#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------#
+=cut
 sub qr_check_in {
     my ($self, $qrcode, $user_id) = @_;
 
@@ -53,7 +104,7 @@ sub qr_check_in {
     });
 
     if(! defined $db_data || (defined $db_data && $db_data->{present}) ) {
-        $log->warn("SKIPPING data not foundqr $qrcode , user_id $user_id ");
+        $log->warn("SKIPPING data not found qr $qrcode , user_id $user_id ");
         $response = {
             result => 'error',
             error  => 'attendance_marked_or_invalid',
@@ -119,6 +170,17 @@ sub qr_check_in {
     return $response;
 }
 
+#----------------------------------------------------------------------------------#
+# used to get complete details of the qrcode
+# qr_info
+#  input qr code (mandatory)
+#--output
+    #    return {
+    #     result  => 'success',
+    #     message => 'qr_data_fetched',
+    #     data    =>  $qr_data 
+    # };
+#----------------------------------------------------------------------------------#
 
 sub qr_info {
     my ($self, $qrcode) = @_;
@@ -128,7 +190,10 @@ sub qr_info {
         binds => [$qrcode]
     }) // {};
 
-    $qr_data = $self->utils->dcd_json($qr_data->{result});
+    #decode the json
+    if(defined $qr_data && defined $qr_data->{result}) {
+        $qr_data = $self->utils->dcd_json($qr_data->{result});
+    }
 
     return {
         result  => 'success',
@@ -137,3 +202,11 @@ sub qr_info {
     };
 
 }
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

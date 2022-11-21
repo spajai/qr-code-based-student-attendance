@@ -46,3 +46,12 @@ sub verify_login : POST Path('') Args(0)  {
     $c->stash->{data} = $result;
     $c->forward('View::JSON');
 }
+
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

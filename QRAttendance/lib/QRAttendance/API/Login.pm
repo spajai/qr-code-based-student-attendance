@@ -1,11 +1,12 @@
 package QRAttendance::API::Login;
+#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------#
 
 use QRAttendance::Policy;
 use QRAttendance::Logger;
 use QRAttendance::DB::Utils;
 use QRAttendance::Utils;
 use QRAttendance::Password::argon2;
-
 #---------------------------------------------------------------------#
 #----------------------------------------------------------------------------------#
 #check user and hashpassword
@@ -31,6 +32,8 @@ has 'entropy_obj' => (
     lazy          => 1
 );
 
+#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------#
 
 sub login {
     my ($self, $user_data) = @_;
@@ -53,6 +56,8 @@ sub login {
 
     return $result;
 }
+#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------#
 
 sub find_user_login {
     my ($self, $params) = @_;
@@ -69,8 +74,6 @@ sub find_user_login {
     }
 
     try {
-        # my $user_db_data = $self->db_utils->get_login_user_data({username => $username});
-
         my $sql = "select *, id as user_id from users where username = ? and is_deleted is false";
         my $user_db_data = $self->db_utils->fetch_row_hashref({ query => $sql, binds => [$username] });
 
@@ -98,6 +101,8 @@ sub find_user_login {
     return $result;
 }
 
+#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------#
 
 sub check_password {
     my ($self, $hashed_pass, $plain_pass) = @_;
@@ -107,6 +112,8 @@ sub check_password {
 
     return  (defined $pass_verify &&  $pass_verify) ? 1 : 0;
 }
+#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------#
 
 sub _unauthorized {
     my ($self, $message) = @_;
@@ -116,6 +123,10 @@ sub _unauthorized {
         message => $message
     };
 }
+
+#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------#
+
 
 
 sub get_user_url_permission {
@@ -144,3 +155,11 @@ sub get_user_url_permission {
 }
 
 1;
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

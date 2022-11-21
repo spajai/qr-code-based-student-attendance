@@ -60,3 +60,10 @@ my $sth = $dbh->prepare($insert_sql);
 foreach my $row ( @{$row_data} ) {
     $sth->execute( @{$row} );
 }
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

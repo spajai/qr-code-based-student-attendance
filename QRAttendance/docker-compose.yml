@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+    qrattendance-db:
+        container_name: qrattendance-db
+        image: postgres:13.3
+        restart: always
+        ports:
+            - 5431:5432
+        volumes:
+            - "${PWD-.}/docker-data/postgresql:/var/lib/postgresql/data"
+        environment:
+            POSTGRES_USER: docker
+            POSTGRES_PASSWORD: docker
+            POSTGRES_DB: qrattendace
+        command: ["postgres", "-c", "log_statement=all"]
+        healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+          interval: 10s
+          timeout: 5s
+          retries: 5
+
+    qrattendance-www:
+        container_name: qrattendance-www
+        image: qrattendance-www:${DOCKER_IMAGE_TAG:-latest}
+        build: .
+        ports:
+            - 3000:3000
+        env_file:
+            - ./env/qrattendance.env
+        depends_on:
+            - qrattendance-db
+        init: true
+        command: >
+             sh -c "perl custom_scripts/rebuild_qrattendance_system.pl"

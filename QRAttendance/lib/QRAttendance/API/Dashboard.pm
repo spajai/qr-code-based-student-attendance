@@ -16,3 +16,11 @@ has 'class_room_api' => (
     default       => sub { QRAttendance::API::Dashboard->new },
     lazy          => 1
 );
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

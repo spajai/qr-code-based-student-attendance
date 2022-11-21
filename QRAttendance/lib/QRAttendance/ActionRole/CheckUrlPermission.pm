@@ -1,15 +1,14 @@
 package QRAttendance::ActionRole::CheckUrlPermission;
 
 use QRAttendance::Policy qw( role );
-use QRAttendance::DB::Utils;
 use QRAttendance::Logger;
+
 around execute => sub {
     my $orig = shift;
     my $self = shift;
     my ( $controller, $c ) = @_;
 
     my $params;
-    my $system_user_info;
     my $logger = QRAttendance::Logger->global();
     ###################################
     # for all user                   ##
@@ -26,21 +25,10 @@ around execute => sub {
         $c->detach;
     }
 
-    ###################################
-    ## only for backend user        ##
-    ###################################
-    if($system_user_info) {
-        $c->stash->{internal}{session_user} = {
-            user_id     => $system_user_info->[0]->{user_id},
-            username    => $system_user_info->[0]->{username},
-        };
-        return $self->$orig(@_);
-    }
-
     my $user_id = $c->user->user_id;
-    $c->stash->{user_permission} =  $c->session->{$user_id}{user_url_permission};
-    $c->stash->{session_user_id} =  $user_id;
-    $c->stash->{session_user_type} =  $c->user->type;
+    $c->stash->{user_permission}     =  $c->session->{$user_id}{user_url_permission};
+    $c->stash->{session_user_id}     =  $user_id;
+    $c->stash->{session_user_type}   =  $c->user->type;
 
     if(! defined $c->stash->{user_permission}) {
         $logger->error("User Dont have permission");
@@ -103,3 +91,10 @@ sub check_permission {
 1;
 
 __END__
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

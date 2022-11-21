@@ -23,20 +23,6 @@ our %SERVER_RESPONSE = (
             i18n_code => 'status.required_param_missing'
         },
     },
-    invalid_email => {
-        throw => {
-            code      => 400,
-            message   => 'Invalid email provided',
-            i18n_code => 'status.invalid_email'
-        },
-    },
-    password_policy_mismatch => {
-        throw => {
-            code      => 400,
-            message   => 'Password do not match the policy',
-            i18n_code => 'status.password_policy_mismatch'
-        },
-    },
     internal_server_error => {
         throw => {
             code      => 500,
@@ -64,27 +50,6 @@ our %SERVER_RESPONSE = (
             is_invalid => 1,
             message    => 'Invalid or Expired Token used',
             i18n_code  => 'status.invalid_token'
-        },
-    },
-    already_activated => {
-        throw => {
-            code      => 409,
-            message   => 'Account already activated',
-            i18n_code => 'status.already_activated'
-        },
-    },
-    activated => {
-        throw => {
-            code      => 200,
-            message   => 'Account activated successfully',
-            i18n_code => 'status.activated'
-        },
-    },
-    activation_failed => {
-        throw => {
-            code      => 400,
-            message   => 'Account activation failed',
-            i18n_code => 'status.activation_failed'
         },
     },
     error => {
@@ -115,21 +80,6 @@ our %SERVER_RESPONSE = (
             i18n_code => 'status.invalid_credentials'
         },
     },
-    pending_account => {
-        throw => {
-            code       => 406,
-            is_pending => 1,
-            message    => 'Account is still pending for verification',
-            i18n_code  => 'status.pending_account'
-        },
-    },
-    password_reset_email_sent => {
-        throw => {
-            code      => 200,
-            message   => 'Reset password link sent on Email',
-            i18n_code => 'status.password_reset_email_sent'
-        },
-    },
     unauthorized => {
         throw => {
             code      => 401,
@@ -144,35 +94,11 @@ our %SERVER_RESPONSE = (
             i18n_code => 'status.forbidden'
         },
     },
-    token_missing => {
-        throw => {
-            code      => 400,
-            message   => 'Token missing from request',
-            i18n_code => 'status.token_missing'
-        },
-
-    },
-    invalid_or_expired_reset_token => {
-        throw => {
-            code      => 400,
-            message   => 'Token used is inavlid or expired',
-            i18n_code => 'status.invalid_or_expired_reset_token'
-        },
-
-    },
     user_register_succesfully => {
         throw => {
             code      => 200,
             message   => 'user registered successfully',
             i18n_code => 'status.user_register_succesfully'
-        },
-
-    },
-    user_already_exist => {
-        throw => {
-            code      => 409,
-            message   => 'User already exists',
-            i18n_code => 'status.user_already_exist'
         },
 
     },
@@ -190,13 +116,6 @@ our %SERVER_RESPONSE = (
             i18n_code => 'status.deleted_user_login'
         },
     },
-    email_already_exist => {
-        throw => {
-            code      => 409,
-            message   => 'Email Already exist',
-            i18n_code => 'status.email_already_exist'
-        },
-    },
     bad_request => {
         throw => {
             code      => 400,
@@ -209,20 +128,6 @@ our %SERVER_RESPONSE = (
             code      => 400,
             message   => 'User does not exists',
             i18n_code => 'status.user_does_not_exist'
-        }
-    },
-    password_and_cnf_password_mismatch => {
-        throw => {
-            code      => 400,
-            message   => 'Password and Confirm Password Mismatch',
-            i18n_code => 'status.password_and_cnf_password_mismatch'
-        }
-    },
-    password_update_success => {
-        throw => {
-            code      => 200,
-            message   => 'Password updated successfully',
-            i18n_code => 'status.password_update_success'
         }
     },
     lecture_already_scheduled => {
@@ -258,6 +163,16 @@ our %SERVER_RESPONSE = (
 1;
 
 __END__
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut
+
+
+
 my %StatusCode = (
     100 => 'Continue',
     101 => 'Switching Protocols',

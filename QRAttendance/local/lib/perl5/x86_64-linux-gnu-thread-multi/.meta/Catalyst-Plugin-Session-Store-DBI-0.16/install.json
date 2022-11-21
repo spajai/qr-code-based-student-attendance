@@ -1,0 +1,1 @@
+{"target":"Catalyst::Plugin::Session::Store::DBI","provides":{"Catalyst::Plugin::Session::Store::DBI":{"file":"lib/Catalyst/Plugin/Session/Store/DBI.pm","version":"0.16"}},"version":"0.16","dist":"Catalyst-Plugin-Session-Store-DBI-0.16","name":"Catalyst::Plugin::Session::Store::DBI","pathname":"F/FL/FLORA/Catalyst-Plugin-Session-Store-DBI-0.16.tar.gz"}

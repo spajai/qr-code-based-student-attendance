@@ -21,8 +21,6 @@ has 'db_conf' => (
             host           => $ENV{PGHOST} // 'localhost',
             username       => $ENV{PGUSER} // 'sushrut',
             password       => $ENV{PGPASSWORD} // 'sushrut',
-            # service        => $ENV{PGSERVICE},
-            # pgservice_file => $ENV{PGSERVICEFILE}
         },
      },
     lazy          => 1,
@@ -87,3 +85,11 @@ sub get_dbi_db_con {
     }
 
 }
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

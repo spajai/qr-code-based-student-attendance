@@ -15,3 +15,11 @@ eval "use Pod::Coverage 0.20";
 plan skip_all => 'Pod::Coverage 0.20 required' if $@;
 
 all_pod_coverage_ok();
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

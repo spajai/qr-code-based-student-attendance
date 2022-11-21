@@ -26,89 +26,11 @@ has 'api_logger' => (
     lazy    => 1,
 );
 
-
 #----------------------------------------------------------------------------------#
 # custom module for all Utils                                                      #
 #----------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------#
-sub insert {
-    my ($self, $params) = @_;
-
-    my $dbi_con = $self->dbi_con;
-
-    if (not defined $dbi_con) {
-        croak "Unable to connect Database " . __PACKAGE__;
-    }
-    if (not defined $params) {
-        croak "insert operation need parameter " . __PACKAGE__;
-    }
-
-    my $valid = $self->validate($params, [qw/table data/]);
-    my $result;
-
-    # open transaction
-    # go to try catch
-    # insert
-    # redis-insert if given
-    # commit return ID
-    # above operation failed ?
-    # rollback
-
-    if ($valid) {
-
-        my $table     = $params->{table};
-        my $data      = $params->{data};
-        my $returning = $params->{returning} // {returning => '"id"'};
-        my $abstract  = $self->sql_abstract;
-        my ($stmt, @bind) = $abstract->insert($table, $data, $returning);
-        my $dbh = $dbi_con->{dbh};
-        my $sth = $dbh->prepare($stmt);
-        my $conn = $dbi_con->{conn};
-        # set mode to ping
-        $conn->mode('ping');
-        my $external_txn;
-
-        #already in transaction
-        if (!$conn->in_txn) {
-            $dbh->begin_work;
-        }
-        else {
-            $external_txn = 1;
-            warn ">>>>>Insert: External DB Transaction Detected <<<<\n";
-        }
-
-        try {
-            $conn->txn(sub {
-                $sth->execute(@bind);
-                if (defined $params->{cache_data}) {
-                    my $cache      = $params->{cache_data};
-                    my $redis_conn = $self->redis_conn;
-                    my $command    = $cache->{command};
-                    my $values     = $cache->{values};
-                    $redis_conn->$command(@{$values});
-                    $self->api_logger->info("Data caching enabled & data cached to redis");
-                }
-                $dbh->commit if (!$external_txn);
-                $self->api_logger->info("Data inserted to $table");
-                $result = $sth->fetch()->[0];
-            });
-        } catch {
-            $self->api_logger->error("Data inserted error for table $table");
-            $dbh->rollback;
-            if (eval { $_->isa('DBIx::Connector::RollbackError') }) {
-                croak 'Transaction aborted: ', $_->error;
-                croak 'Rollback failed too: ', $_->rollback_error;
-            } else {
-                croak "Caught exception in DB::utils::update method: $_";
-            }
-        };
-
-    }
-
-    return $result;
-}
-
 #----------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------#
 sub fetch_row_hashref {
@@ -383,3 +305,11 @@ sub update {
 }
 
 1;
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

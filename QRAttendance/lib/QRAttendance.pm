@@ -3,7 +3,6 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
-extends 'QRAttendance::API';
 
 use QRAttendance::DB;
 use QRAttendance::Utils;
@@ -17,13 +16,10 @@ use QRAttendance::Logger;
 #         -Debug: activates the debug mode for very useful log messages
 #   ConfigLoader: will load the configuration from a Config::General file in the
 #                 application's home directory
-# Static::Simple: will serve static files from the application's root
-#                 directory
 
 use Catalyst qw/
     -Debug
     ConfigLoader
-    Static::Simple
     Session
     Authentication
     Session Session::Store::DBI
@@ -43,6 +39,10 @@ our $VERSION = '0.01';
 # with an external configuration file acting as an override for
 # local deployment.
 
+my $db_name = $ENV{PGDATABASE}//'qrattendance';
+my $db_host = $ENV{PGHOST} //'localhost';
+my $db_pass =$ENV{PGPASSWORD}//'sushrut';
+my $db_user =$ENV{PGUSER} // 'sushrut';
 __PACKAGE__->config(
     name => 'QRAttendance',
     # Disable deprecated behavior needed by old applications
@@ -54,32 +54,17 @@ __PACKAGE__->config(
     'View::JSON'                   => {
         'expose_stash' => [qw/data/],    # defaults to everything
     },
-    'Plugin::Static::Simple' => {
-        'include_path' => [__PACKAGE__->path_to('root'), '/tmp'],
-    },
 
     'Plugin::Session' =>  {
         expires   => 3600,
-        dbi_dsn   => 'dbi:Pg:dbname=qrattendance;host=localhost;port=5432',
-        dbi_user  => 'sushrut',
-        dbi_pass  => 'sushrut',
+        dbi_dsn   => "dbi:Pg:dbname=$db_name;host=$db_host;port=5432",
+        dbi_user  => $db_user,
+        dbi_pass  => $db_pass,
         dbi_table => 'sessions',
         dbi_id_field => 'sess_id',
         dbi_data_field => 'session_data',
         dbi_expires_field => 'expires',
     },
-
-
-
-#  my $dbh = DBI->connect(
-#             $cfg->{'dbi_dsn'},
-#             $cfg->{'dbi_user'},
-#             $cfg->{'dbi_pass'},
-#             \%options,
-#         ) or Catalyst::Exception->throw( message => $DBI::errstr );
-
-
-
 
     'Plugin::Authentication' => {
         default => {
@@ -129,4 +114,11 @@ it under the same terms as Perl itself.
 
 =cut
 
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut
 1;

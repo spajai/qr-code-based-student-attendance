@@ -234,3 +234,10 @@ as the first argument, and the current context as the second.
 =head2 check_password( )
 
 =cut
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

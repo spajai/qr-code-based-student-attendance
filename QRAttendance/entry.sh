@@ -1,0 +1,1 @@
+perl script/qrattendance_server.pl -d -f -p 3000 > /tmp/access.log && tail -f /tmp/access.log

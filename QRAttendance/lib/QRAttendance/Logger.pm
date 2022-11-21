@@ -347,3 +347,11 @@ EOCODE
 }
 
 1;
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

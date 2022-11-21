@@ -29,6 +29,7 @@ L<QRAttendance>
 
 =head1 AUTHOR
 
+spajai@cpan.org
 ,,,
 
 =head1 LICENSE

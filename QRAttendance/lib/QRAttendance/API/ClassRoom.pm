@@ -20,23 +20,31 @@ has 'class_room_api' => (
 #----------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------#
-
+# 
 sub get_class_room_code : GET Path('class-rooms') Args(1) Does('CheckUrlPermission') {
-    my ($self, $c, $class_room_code) = @_;
+    # my ($self, $c, $class_room_code) = @_;
 
-    if( ! defined $class_room_code or $class_room_code !~ /^CR/) {
-        $c->stash->{data} = {result => 'error', error => 'body_decode_error'};
-        $c->log->error("Error ClassRoom code is required found invalid code ". $class_room_code);
-        return;
-    }
+    # if( ! defined $class_room_code or $class_room_code !~ /^CR/) {
+    #     $c->stash->{data} = {result => 'error', error => 'body_decode_error'};
+    #     $c->log->error("Error ClassRoom code is required found invalid code ". $class_room_code);
+    #     return;
+    # }
 
-    my $result = $self->class_room_api->get_class_room_list($class_room_code);
+    # my $result = $self->class_room_api->get_class_room_list($class_room_code);
 
-    $c->stash->{data} = $result;
+    # $c->stash->{data} = $result;
 
-    return;
+    # return;
 }
 
 __PACKAGE__->meta->make_immutable;
 
 1;
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

@@ -66,3 +66,10 @@ my $count = 0;
 }
 
 done_testing();
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

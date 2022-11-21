@@ -1,12 +1,3 @@
-create view active_teachers as (
-	select * from users where type = 'Teacher' and is_deleted is false
-);
-
-
-create  view  active_students as (
-	select * from users  where type = 'Student' and is_deleted is false 
-);
-
 drop view if exists qr_data_vw;
 create  view qr_data_vw as (
 with absent_data as (
@@ -53,7 +44,7 @@ with absent_data as (
 		'total_absent',        (SELECT total_absent from absent_data),
 		'all_present_student', (SELECT all_present_student from present_data),
 		'total_present',       (SELECT total_present from present_data),
-		'qr_data',			  (SELECT qr_info from qr_data)
+		'qr_data',			   (SELECT qr_info from qr_data)
 	) AS result, q.qr_code
 	from qr_data q
 

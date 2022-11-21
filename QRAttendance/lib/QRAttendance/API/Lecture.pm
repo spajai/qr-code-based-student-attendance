@@ -1,8 +1,16 @@
 package QRAttendance::API::Lecture;
+#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------#
+# modules needed
 use QRAttendance::Policy;
 use QRAttendance::Logger;
 use QRAttendance::Utils;
 use QRAttendance::DB::Utils;
+#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------#
+
+#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------#
 
 has 'utils' => (
     is            => 'ro',
@@ -18,6 +26,31 @@ has 'db_utils' => (
 );
 #----------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------#
+
+=pod
+#----------------------------------------------------------------------------------#
+# used to create lecture
+#   sub create_lecture
+# 
+        inp :
+            invocant
+            data hashref madatory keys (name lecture_code room_code course_code user_id start_timestamp)
+        Return :
+        for error
+        {
+            result => 'error', 
+            error  => 'lecture_already_scheduled',
+        }
+        for success
+            {
+                result  => 'success',
+                message => 'lecture_success',
+                data    => $res_json
+            };
+
+#
+#----------------------------------------------------------------------------------#
+=cut
 sub create_lecture {
     my ($self, $data) = @_;
 
@@ -85,3 +118,11 @@ sub create_lecture {
 
     return $response;
 }
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

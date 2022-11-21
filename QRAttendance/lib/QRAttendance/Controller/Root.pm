@@ -94,7 +94,6 @@ sub logout : Path('logout') {
 sub catch_errors : Private {
     my ($self, $c, @errors) = @_;
 
-    # Handle custom error using AudioCast::Role::Exception role
     $self->handle_catch_errors($c, @errors);
 }
 
@@ -135,3 +134,12 @@ sub end : ActionClass('RenderView') {
     return;
 
 }
+
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

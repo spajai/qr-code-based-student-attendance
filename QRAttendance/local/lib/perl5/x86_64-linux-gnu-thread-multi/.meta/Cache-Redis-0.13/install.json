@@ -1,0 +1,1 @@
+{"target":"Cache::Redis","provides":{"Cache::Redis":{"version":"0.13","file":"lib/Cache/Redis.pm"}},"pathname":"S/SO/SONGMU/Cache-Redis-0.13.tar.gz","name":"Cache::Redis","version":"0.13","dist":"Cache-Redis-0.13"}

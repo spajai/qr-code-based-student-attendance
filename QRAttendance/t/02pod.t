@@ -11,3 +11,11 @@ eval "use Test::Pod 1.14";
 plan skip_all => 'Test::Pod 1.14 required' if $@;
 
 all_pod_files_ok();
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut

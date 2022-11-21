@@ -1,0 +1,1 @@
+{"dist":"Redis-1.999","version":"1.999","provides":{"Redis::List":{"version":"1.999","file":"lib/Redis/List.pm"},"Redis::Sentinel":{"version":"1.999","file":"lib/Redis/Sentinel.pm"},"Redis::Hash":{"version":"1.999","file":"lib/Redis/Hash.pm"},"Redis":{"file":"lib/Redis.pm","version":"1.999"}},"pathname":"D/DA/DAMS/Redis-1.999.tar.gz","target":"Redis","name":"Redis"}

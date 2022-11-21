@@ -34,3 +34,11 @@ my $rs = JSON::decode_json('{"result" : "success","code" : 200,"message" : "Logi
 is_deeply( JSON::decode_json($response->decoded_content), $rs);
 
 done_testing();
+
+=head1 AUTHOR
+
+spajai@cpan.org
+
+=head1 LICENSE
+
+=cut
