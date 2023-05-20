@@ -1,1 +1,4 @@
 Run script/qrattendance_server.pl to test the application.
+
+Code is present in Headless mode with API + database working 
+API interface can be consume to build UI 
